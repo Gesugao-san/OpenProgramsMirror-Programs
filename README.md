@@ -1,2 +1,3 @@
 
-# Go to https://github.com/Proxima-Project/MiscPrograms
+# OpenProgramsMirror-Programs
+Local developments for MightyPirates/OpenComputers mod, MC 1.7.10.
