@@ -1,11 +1,12 @@
 
-local term = require('terminal')
+local term = require('term')
 local fs = require('filesystem')
+local sz = require('serialization')
 
 local path = '/home/affiche.txt'
 
 
-if !term.isAvailable() then
+if not term.isAvailable() then
     term.write('Can\'t write. Stopping.')
     return
 end
@@ -19,7 +20,7 @@ if not fs.isAutorunEnabled() then
 end
 
 if not fs.exists(path) then
-    term.write(path + 'does not exist. Stopping.')
+    term.write(sz.serialize(path, 'does not exist. Stopping.'))
     return
 end
 
