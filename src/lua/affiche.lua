@@ -1,9 +1,9 @@
 
 local term = require('term')
 local fs = require('filesystem')
-local sz = require('serialization')
+local ev = require("event")
 
-local path = '/home/affiche.txt'
+local path = "/home/affiche.txt"
 
 
 if not term.isAvailable() then
@@ -12,26 +12,29 @@ if not term.isAvailable() then
 end
 
 term.clear()
-term.write('Program started.')
+term.write('Program started.\n')
 
 if not fs.isAutorunEnabled() then
-    term.write('Enabling autorun.')
+    term.write('Warning: Enabling autorun.')
     fs.setAutorunEnabled(true)
 end
 
 if not fs.exists(path) then
-    term.write(sz.serialize(path, 'does not exist. Stopping.'))
+    term.write('Please create '..path..'\n')
+    term.write('Fatal error: File does not exist. Stopping.')
     return
 end
 
-local file = fs.open(path, 'r')
+local file = io.open(path) --fs.open(path, 'r')
 
 if file == nil then
     term.write('Can\'t open file. Stopping.')
     return
 end
 
-term.write(file)
+term.write(file:read('*a'))
 
-file.close()
+file:close()
+
+ev.pull("key_down") --term.read()
 
