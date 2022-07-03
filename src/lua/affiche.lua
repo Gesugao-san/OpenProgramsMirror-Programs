@@ -1,9 +1,9 @@
 
 local term = require('term')
 local fs = require('filesystem')
-local ev = require("event")
+local ev = require('event')
 
-local path = "/home/affiche.txt"
+local path = '/home/affiche.txt'
 
 
 if not term.isAvailable() then
@@ -11,8 +11,6 @@ if not term.isAvailable() then
     return
 end
 
-term.clear()
-term.write('Program started.\n')
 
 if not fs.isAutorunEnabled() then
     term.write('Warning: Enabling autorun.')
@@ -32,9 +30,9 @@ if file == nil then
     return
 end
 
+term.clear()
+term.write('Program started.\n')
 term.write(file:read('*a'))
-
 file:close()
-
-ev.pull("key_down") --term.read()
+ev.pull('key_down') --term.read()
 
