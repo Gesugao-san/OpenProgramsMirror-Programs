@@ -7,27 +7,27 @@ local path = '/home/affiche.txt'
 
 
 if not term.isAvailable() then
-    term.write('Can\'t write. Stopping.')
-    return
+  term.write('Can\'t write. Stopping.')
+  return
 end
 
 
 if not fs.isAutorunEnabled() then
-    term.write('Warning: Enabling autorun.')
-    fs.setAutorunEnabled(true)
+  term.write('Warning: Enabling autorun.')
+  fs.setAutorunEnabled(true)
 end
 
 if not fs.exists(path) then
-    term.write('Please create "' .. path .. '"\n')
-    term.write('Fatal error: File does not exist. Stopping.')
-    return
+  term.write('Please create "' .. path .. '"\n')
+  term.write('Fatal error: File does not exist. Stopping.\n')
+  return
 end
 
 local file = io.open(path) --fs.open(path, 'r')
 
 if file == nil then
-    term.write('Can\'t open file. Stopping.')
-    return
+  term.write('Can\'t open file. Stopping.')
+  return
 end
 
 term.clear()
