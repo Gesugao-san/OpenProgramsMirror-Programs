@@ -18,7 +18,7 @@ if not fs.isAutorunEnabled() then
 end
 
 if not fs.exists(path) then
-    term.write('Please create '..path..'\n')
+    term.write('Please create "' .. path .. '"\n')
     term.write('Fatal error: File does not exist. Stopping.')
     return
 end
@@ -31,7 +31,7 @@ if file == nil then
 end
 
 term.clear()
-term.write('Program started.\n')
+term.write('Press any key to close. File: "' .. path .. '"\n')
 term.write(file:read('*a'))
 file:close()
 ev.pull('key_down') --term.read()
