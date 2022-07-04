@@ -1,0 +1,12 @@
+NAME
+  affiche - clears the terminal and read the file
+
+SYNOPSIS
+  affiche
+
+DESCRIPTION
+  Clears any text from the screen, and read the target file. Then shows it. To exit, press any key.
+
+EXAMPLES
+  affiche
+    Shows file/
