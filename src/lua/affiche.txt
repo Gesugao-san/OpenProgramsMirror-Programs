@@ -1,0 +1,6 @@
+this
+is
+custom
+text
+from
+file
