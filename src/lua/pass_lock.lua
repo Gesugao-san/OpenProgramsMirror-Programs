@@ -6,13 +6,15 @@ local term      = require("term")
 local sides     = require("sides")
 local note      = require("note")
 local component = require("component")
+local string    = require("string")
 -- находим красную плату компьютера
 local rs = component.redstone
 
 -- объявляем переменные: пароли и переменную для записи ввода
 local password = "mad"
 local admin    = "exit"
-local try
+local seconds  = 3 -- more than 0.6!
+local try --, position
 
 -- отключаем сигнал на переднюю панель компьютера (дверь закрыта)
 rs.setOutput(sides.south, 0)
@@ -29,15 +31,21 @@ while true do
     print("No, no, no!")
   -- если пароль верный
   elseif try == password then
-    term.clear()
+    --position = term.getCursor()
+    --print("position:" .. position)
+    term.clear() --  term.clearLine()
+    io.write("Enter password: ")
+    for i = 1, string.len(password), 1 do
+      io.write("*")
+    end
     -- пускаем сигнал на переднюю сторону компьютера (дверь открыта)
     rs.setOutput(sides.south, 15)
-    print("Ok. 3 seconds!")
+    print("\nOk. " .. seconds .. " seconds!")
     -- воспроизводим звуковой сигнал
     note.play(83, 0.3)
     note.play(90, 0.2)
     -- ожидаем две с половиной секунды
-    os.sleep(2.5)
+    os.sleep(seconds - 0.5)
     -- закрываем дверь
     rs.setOutput(sides.south, 0)
     print("Locked!")
