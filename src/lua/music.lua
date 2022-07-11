@@ -1,4 +1,6 @@
 
+-- OpenComputers 1.6.1.11
+
 local note = require('note')
 
 -- frequency

@@ -1,11 +1,13 @@
 
+-- OpenComputers 1.6.1.11
+
 local term          = require('term')
 local component     = require('component')
 local ev            = require('event')
 local serialization = require('serialization')
 local fs            = require('filesystem')
 
-local target_type = 'inventory_controller' --'database' --'redstone'
+local target_type = 'motion_sensor' --'inventory_controller' --'database' --'redstone'
 
 local function table_print(table)
   --term.write(table.serialize())
@@ -39,7 +41,7 @@ table_save(target)
 for _address, _ in pairs(target) do
   target = _address
 end
-local address = component.get(target.address)
+local address = component.get(target) -- target.address
 print(address)
 local proxy = component.proxy(address)
 table_print(proxy)

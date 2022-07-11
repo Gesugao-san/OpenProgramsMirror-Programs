@@ -1,4 +1,6 @@
 
+-- OpenComputers 1.6.1.11
+
  -- http://minecraft.fandom.com/ru/wiki/OpenComputers/Программа:_кодовый_замок
 
 -- подключаем необходимые интерфейсы
