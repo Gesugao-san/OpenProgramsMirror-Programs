@@ -13,6 +13,7 @@ function debug(type)
   MM = {}; N=0
   for k, v in pairs(M) do N = N+1; MM[N] = k end
   print('Methods: ' .. S.serialize(MM)) -- print(S.serialize(M))
+  --write_to_file('/home/_fast.txt', 'Methods: ' .. S.serialize(MM))
   for method, _ in pairs(C.methods(X.address)) do
     print(method .. ': ' .. C.invoke(X.address, method))
     --print(C.doc(X.address, method))
