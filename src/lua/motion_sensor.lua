@@ -1,5 +1,5 @@
 
--- OpenComputers 1.6.1.11
+-- Lua 5.2; OpenComputers 1.6.1.11;
 
 --[[ for i = 1, 3, 1 do
   print(i)
