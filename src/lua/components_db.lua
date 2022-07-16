@@ -39,7 +39,7 @@ NotShows = {
 }
 
 Mods = {
-  'component', -- GregTech
+  'batterybuffer_09_tier_01', --'component', -- GregTech
   'info_panel', -- Nuclear Control 2
 }
 

@@ -1,5 +1,6 @@
 
 -- Lua 5.2; OpenComputers 1.6.1.11;
+-- rm 1.lua&&edit 1.lua&&1
 
 C = require('component'); S = require('serialization')
 
@@ -10,9 +11,9 @@ function debug(type)
   if X == nil then print('no getPrimary "' .. type .. '"'); do return end end
   print('type: "' .. type .. '", address: ' .. X.address)
   M = C.methods(X.address)
-  MM = {}; N=0
-  for k, v in pairs(M) do N = N+1; MM[N] = k end
-  print('Methods: ' .. S.serialize(MM)) -- print(S.serialize(M))
+  MM = {}; N = 0
+  for k, v in pairs(M) do N = N + 1; MM[N] = k end
+  print('Methods: ' .. S.serialize(MM):gsub('{', ''):gsub('}', '')) -- print(S.serialize(M))
   --write_to_file('/home/_fast.txt', 'Methods: ' .. S.serialize(MM))
   for method, _ in pairs(C.methods(X.address)) do
     print(method .. ': ' .. C.invoke(X.address, method))
@@ -24,4 +25,4 @@ function debug(type)
   X = nil
 end
 
-debug('component')
+debug('batterybuffer_09_tier_01')
