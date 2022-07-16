@@ -66,35 +66,75 @@ local function find_component(target_type, need_second)
 end
 
 
+
 find_component('hologram')
 print('')
 if Target1 == nil then do return end end
 
 print('Target1.maxDepth:' .. serialization.serialize(Target1.maxDepth()))
 print('Target1.getScale:' .. serialization.serialize(Target1.getScale()))
+local block_length = 16
 
 Target1.clear()
 -- Target1.setScale(0.3) -- 1х1х1
-if Target1.setRotationSpeed(0, 1, 0, 0) then
+if Target1.setRotationSpeed(0, 1, 1, 1) then
   print('setRotationSpeed - Ok?')
 else
   print('setRotationSpeed - Error?')
 end
 
-if Target1.setRotationSpeed(1, 1, 0, 0) then
+if Target1.setRotationSpeed(1, 0, 0, 1) then
   print('setRotationSpeed - Ok?')
 else
   print('setRotationSpeed - Error?')
 end
 
-for x = 1, 16, 1 do
-  for y = 9, 24, 1 do
-    for z = 1, 16, 1 do
-      Target1.set(x, y, z, true)
+local function block_make(offset_x, offset_y, offset_z, data)
+  for x = offset_x + 1, offset_x + 16, 1 do
+    for y = offset_y + 9, offset_y + 24, 1 do
+      for z = offset_z + 1, offset_z + 16, 1 do
+        Target1.set(x, y, z, data or math.random(0, 1))
+        -- if (math.fmod(x, 4) == 0) then end
+      end
     end
-    os.sleep(0.05)
+    os.sleep(0.01)
   end
 end
 
+local function block_empty(offset_x, offset_y, offset_z)
+  for x = offset_x + 2, offset_x + 15, 1 do
+    for y = offset_y + 10, offset_y + 23, 1 do
+      for z = offset_z + 2, offset_z + 15, 1 do
+        Target1.set(x, y, z, false)
+        -- if (math.fmod(x, 4) == 0) then end
+      end
+    end
+    os.sleep(0.01)
+  end
+  
+end
+
+
+local block_count = block_length * 2
+for offset_x = 0, block_count, block_length do
+  for offset_y = 0, 0, block_length do
+    for offset_z = 0, block_count, block_length do
+      block_make(offset_x, offset_y, offset_z)
+      block_empty(offset_x, offset_y, offset_z)
+    end
+  end
+end
+
+os.sleep(3)
+
+for offset_x = 0, block_count, block_length do
+  for offset_y = 0, 0, block_length do
+    for offset_z = 0, block_count, block_length do
+      block_make(offset_x, offset_y, offset_z, 0)
+    end
+  end
+end
+
+Target1.clear()
 
 
