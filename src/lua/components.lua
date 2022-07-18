@@ -7,7 +7,9 @@ local ev            = require('event')
 local serialization = require('serialization')
 local fs            = require('filesystem')
 
-local target_type = 'motion_sensor' --'inventory_controller' --'database' --'redstone'
+local target_type = 'debug' --'inventory_controller' --'database' --'redstone'
+local path = '/home/' .. target_type .. '.txt'
+os.remove(path)
 
 local function table_print(table)
   --term.write(table.serialize())
@@ -20,13 +22,12 @@ end
 local function table_save(table)
   for index, param in pairs(table) do
     print(index .. ': ' .. tostring(param))
-    local path = '/home/' .. index .. '.txt'
-    local file = io.open(path, 'w') --fs.open(path, 'r')
+    local file = io.open(path, 'a') --fs.open(path, 'r')
     if file == nil then
       term.write('Can\'t open file. Stopping.\n')
       return
     end
-    file:write(tostring(param) .. '\n')
+    file:write(tostring(tostring(index) .. ': ' .. tostring(param)) .. '\n')
     file:close()
   end
 end

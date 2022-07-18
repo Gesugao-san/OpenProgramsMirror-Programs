@@ -25,4 +25,9 @@ function debug(type)
   X = nil
 end
 
-debug('batterybuffer_09_tier_01')
+function Main()
+  debug('batterybuffer_09_tier_01')
+end
+
+
+if not package.loaded['modulename'] then return Main() --[[ main case ]] else return Main --[[ module case ]] end
