@@ -5,9 +5,41 @@
 local component, term, s, io = require('component'), require('term'), require('serialization'), require('io')
 local debug_card = component.debug
 if debug_card == nil then do return end end
+Rules = {}
 
-local function execute(command, replace1, replace2)
-  print('Command: ' .. command) -- Executing
+local function tablelength(T)
+  local count = 0
+  for _ in pairs(T) do count = count + 1 end
+  return count
+end
+
+local function is_in_table(table, target)
+  local is_in = false
+  if ((tablelength(table) == 0) and (target == '/gamerule')) then
+    print('Warning: List of rules empty. Passing.')
+    is_in = true
+    return is_in
+  end
+  for _, v in pairs(table) do
+    if v == target then
+      is_in = true
+      break
+    end
+  end
+  return is_in
+end
+
+local function execute(command, replace)
+  print(command) -- Executing
+
+  if string.find(command, '/gamerule ') then
+    if (not is_in_table(Rules, command:gsub('%/gamerule ', ''))) then
+      local details = 'Error: Command "' .. command:gsub('%/gamerule ', '') .. '" not in the avaliable rules list.'
+      print(details)
+      return false, details
+    end
+  end
+
   local success, details = debug_card.runCommand(command)
   
   if (success ~= 1) then
@@ -20,9 +52,9 @@ local function execute(command, replace1, replace2)
     end
   end
 
-  if (replace1 ~= nil) then
+  if (replace == true) then
     local t, i = {}, 1
-    details = details:gsub(replace1, replace2)
+    details = details:gsub('% and ', ', ')
     --details:gsub("(.)", function(c) table.insert(t, c) end)
     for word in details:gmatch('[^,%s]+') do
       table.insert(t, i, word)
@@ -31,6 +63,11 @@ local function execute(command, replace1, replace2)
     return success, details, t
   end
   return success, details
+end
+
+local function get_rules(rules)
+  local _, _, rules = execute('/gamerule', true)
+  return rules
 end
 
 print('Connect debug card and get any item.')
@@ -52,8 +89,7 @@ if ((tostring(mute) ~= 'yes') or (tostring(mute) ~= 'y') or (tostring(mute) ~= '
 else mute = true end
 
 
-local _, _, rules = execute('/gamerule', '% and ', ', ')
-print('rules: ' .. s.serialize(rules))
+Rules = get_rules(Rules)
 
 execute('/gamerule logAdminCommands')
 execute('/gamerule commandBlockOutput')
