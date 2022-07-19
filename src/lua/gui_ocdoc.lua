@@ -17,9 +17,9 @@ end
 
 gpu.fill(1, 1, w, h, " ") -- clears the screen
 sleep(0.1)
-gpu.setForeground(0x000000)
+local previousForeground = gpu.setForeground(0x000000)
 sleep(0.1)
-gpu.setBackground(0xFFFFFF)
+local previousBackground = gpu.setBackground(0xFFFFFF)
 sleep(0.1)
 gpu.fill(1, 1, w/2, h/2, "X") -- fill top left quarter of screen
 sleep(0.1)

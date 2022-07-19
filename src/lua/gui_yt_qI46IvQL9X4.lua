@@ -19,17 +19,17 @@ local function sleep(n)
 end
 
 local function funcButton()
-  -- your code
+  -- Put your nice code here
 end
 
 local function funcButton1()
-  gpu.set(Buttons.button1.x + Buttons.button1.width + 2 + 4, Buttons.button1.y, "Кнопка нажата")
+  gpu.set((Buttons.button1.x + Buttons.button1.width + 2 + 4), Buttons.button1.y, "Кнопка нажата")
 end
 
 local function funcButton2()
   sleep(4)
   for _, button in pairs(Buttons) do
-  button.active = false
+    button.active = false
   end
   Buttons.button3.active = true
   term.clear()
@@ -45,7 +45,7 @@ Buttons = {
   button  = {
     x = 2,
     y = 2,
-    text = "Button",
+    text = "Your code",
     active = true,
     switchedButton = true,
     autoSwitch = false,
@@ -60,7 +60,7 @@ Buttons = {
   button1 = {
     x = 16,
     y = 4,
-    text = "Button 1",
+    text = "Notify",
     active = true,
     switchedButton = false,
     autoSwitch = false,
@@ -75,7 +75,7 @@ Buttons = {
   button2 = {
     x = 4,
     y = 16,
-    text = "Button 2",
+    text = "Show bad button",
     active = true,
     switchedButton = true,
     autoSwitch = true,
@@ -111,6 +111,7 @@ local function initButtons()
 end
 
 function DrawButtons()
+  term.clear()
   for _, button in pairs(Buttons) do
     if (button.active) then
       if (not button.buttonPressed) then
@@ -140,7 +141,6 @@ function DrawButtons()
 end
 
 local function searchButton()
-  while true do
     local _, _, x, y = event.pull("touch")
     for _, button in pairs(Buttons) do
       if ((x >= button.x) and (x < button.x + button.width + 2) and (y >= button.y) and (y < button.y + button.height) and (button.active)) then
@@ -154,20 +154,20 @@ local function searchButton()
           else
             button.buttonPressed = true
           end
-          term.clear()
           DrawButtons()
         end
         button.func()
       end
     end
-  end
 end
 
 
 function Main()
   initButtons()
   DrawButtons()
-  searchButton()
+  while true do
+    searchButton()
+  end
   os.exit() --do return end
 end
 
