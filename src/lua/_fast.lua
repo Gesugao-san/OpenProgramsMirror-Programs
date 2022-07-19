@@ -26,7 +26,7 @@ function debug(type)
 end
 
 function Main()
-  debug('batterybuffer_09_tier_01')
+  debug('tank_controller')
 end
 
 

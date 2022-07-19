@@ -7,7 +7,7 @@ local ev            = require('event')
 local serialization = require('serialization')
 local fs            = require('filesystem')
 
-local target_type = 'debug' --'inventory_controller' --'database' --'redstone'
+local target_type = 'gt_pipe_bronze' --'inventory_controller' --'database' --'redstone'
 local path = '/home/' .. target_type .. '.txt'
 os.remove(path)
 
@@ -50,6 +50,7 @@ table_save(proxy)
 
 term.write(proxy.address .. ' ' .. proxy.type)
 
+print(proxy.getStoredSteam())
 
 --[[ local path = '/home/debug.txt'
 local file = io.open(path) --fs.open(path, 'r')
