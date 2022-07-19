@@ -19,17 +19,17 @@ local function sleep(n)
 end
 
 local function funcButton()
-  -- Здесь мог бы быть Ваш шикарнейший код
+  -- your code
 end
 
 local function funcButton1()
-  gpu.set(Buttons.button1.x + Buttons.button1.width + 2 + 4 , Buttons.button1.y, "Кнопка нажата")
+  gpu.set(Buttons.button1.x + Buttons.button1.width + 2 + 4, Buttons.button1.y, "Кнопка нажата")
 end
 
 local function funcButton2()
   sleep(4)
-  for k,v in pairs(Buttons) do
-  v.active = false
+  for _, button in pairs(Buttons) do
+  button.active = false
   end
   Buttons.button3.active = true
   term.clear()
@@ -41,39 +41,95 @@ local function funcDont_Touch()
   redstone.setOutput(0, 255)
 end
 
-Buttons = {button =  {x=2, y=2, text="button", active=true, switchedButton = true, autoSwitch=false, buttonPressed = false, func = funcButton, height=3, cFore = 0xFFFFFF, cBack = 0xFF0000, cFore1 = 0x000000, cBack1 = 0x00FF00},
-  button1 = {x=16, y=4, text="button1", active=true, switchedButton = false, autoSwitch=false, buttonPressed = false, func = funcButton1, height=2, cFore = 0xFFFFFF, cBack = 0x0000FF},
-  button2 = {x=4, y=16, text="button2", active=true, switchedButton = true, autoSwitch=true, buttonPressed = false, func = funcButton2, height=4, cFore = 0xFFFFFF, cBack = 0xFFFF00, cFore1 = 0xFFFFFF, cBack1 = 0x00FFFF},
-  button3 = {x=72, y=24, text="Не нажимать!", active=false, switchedButton = true, autoSwitch=false, buttonPressed = false, func = funcDont_Touch, height=5, cFore = 0x333333, cBack = 0xFF0000, cFore1 = 0xFFFFFF, cBack1 = 0xFF0000}}
+Buttons = {
+  button  = {
+    x = 2,
+    y = 2,
+    text = "Button",
+    active = true,
+    switchedButton = true,
+    autoSwitch = false,
+    buttonPressed = false,
+    func = funcButton,
+    height = 3,
+    cFore = 0xFFFFFF,
+    cBack = 0xFF0000,
+    cFore1 = 0x000000,
+    cBack1 = 0x00FF00,
+  },
+  button1 = {
+    x = 16,
+    y = 4,
+    text = "Button 1",
+    active = true,
+    switchedButton = false,
+    autoSwitch = false,
+    buttonPressed = false,
+    func = funcButton1,
+    height = 2,
+    cFore = 0xFFFFFF,
+    cBack = 0x0000FF,
+    --cFore1 = 0x000000,
+    --cBack1 = 0x00FF00,
+  },
+  button2 = {
+    x = 4,
+    y = 16,
+    text = "Button 2",
+    active = true,
+    switchedButton = true,
+    autoSwitch = true,
+    buttonPressed = false,
+    func = funcButton2,
+    height = 4,
+    cFore = 0xFFFFFF,
+    cBack = 0xFFFF00,
+    cFore1 = 0xFFFFFF,
+    cBack1 = 0x00FFFF,
+  },
+  button3 = {
+    x = 72,
+    y = 24,
+    text = "Не нажимать!",
+    active = false,
+    switchedButton = true,
+    autoSwitch = false,
+    buttonPressed = false,
+    func = funcDont_Touch,
+    height = 5,
+    cFore = 0x333333,
+    cBack = 0xFF0000,
+    cFore1 = 0xFFFFFF,
+    cBack1 = 0xFF0000,
+  },
+}
 
 local function initButtons()
-  for k,v in pairs(Buttons) do
-    v.width = unicode.wlen(v.text) + 2
+  for _, button in pairs(Buttons) do
+    button.width = unicode.wlen(button.text) + 2
   end
 end
 
-initButtons()
-
 function DrawButtons()
-  for k,v in pairs(Buttons) do
-    if v.active then
-      if not v.buttonPressed then -- если кнопка не нажата
-        gpu.setForeground(v.cFore)
-        gpu.setBackground(v.cBack)
-      else                      -- в ином случае
-        gpu.setForeground(v.cFore1)
-        gpu.setBackground(v.cBack1)
+  for _, button in pairs(Buttons) do
+    if (button.active) then
+      if (not button.buttonPressed) then
+        gpu.setForeground(button.cFore)
+        gpu.setBackground(button.cBack)
+      else
+        gpu.setForeground(button.cFore1)
+        gpu.setBackground(button.cBack1)
       end
-      gpu.fill(v.x, v.y, v.width, v.height, " ") -- фон для кнопки
-      if v.height == 1 then         -- если высота кнопки равна 1
-        gpu.set(v.x+1, v.y, v.text)
-      elseif v.height%2 == 0 then   -- если высота кнопки равна четному числу
-        gpu.set(v.x+1, v.y + (v.height/2 - 1), v.text)
-      elseif v.height%2 == 1 then   -- если высота кнопки равна нечетному числу
-        gpu.set(v.x+1, v.y + (math.ceil(v.height/2) - 1), v.text)
+      gpu.fill(button.x, button.y, button.width, button.height, " ") -- set button Background
+      if (button.height == 1) then
+        gpu.set(button.x + 1, button.y, button.text)
+      elseif ((button.height % 2) == 0) then   -- if button height is an even number
+        gpu.set(button.x + 1, button.y + (button.height / 2 - 1), button.text)
+      elseif ((button.height % 2) == 1) then   -- if button height is odd number
+        gpu.set(button.x + 1, button.y + (math.ceil(button.height / 2) - 1), button.text)
       end
-      if v.autoSwitch == true and v.buttonPressed == true then
-        v.buttonPressed = false
+      if ((button.autoSwitch == true) and (button.buttonPressed == true)) then
+        button.buttonPressed = false
         sleep(4)
         DrawButtons()
       end
@@ -85,28 +141,36 @@ end
 
 local function searchButton()
   while true do
-    local _,_,x,y = event.pull("touch")
-    for k,v in pairs(Buttons) do
-      if x >= v.x and x < v.x + v.width+2 and y >= v.y and y < v.y + v.height and v.active then
-        if v.switchedButton == true then
-          if not v.autoSwitch then
-            if v.buttonPressed == false then
-              v.buttonPressed = true
+    local _, _, x, y = event.pull("touch")
+    for _, button in pairs(Buttons) do
+      if ((x >= button.x) and (x < button.x + button.width + 2) and (y >= button.y) and (y < button.y + button.height) and (button.active)) then
+        if (button.switchedButton == true) then
+          if (not button.autoSwitch) then
+            if (button.buttonPressed == false) then
+              button.buttonPressed = true
             else
-              v.buttonPressed = false
+              button.buttonPressed = false
             end
           else
-            v.buttonPressed = true
+            button.buttonPressed = true
           end
           term.clear()
           DrawButtons()
         end
-        v.func()
+        button.func()
       end
     end
   end
 end
 
-DrawButtons()
-searchButton()
+
+function Main()
+  initButtons()
+  DrawButtons()
+  searchButton()
+  os.exit() --do return end
+end
+
+
+if not package.loaded['modulename'] then return Main() --[[ main case ]] else return Main --[[ module case ]] end
 
