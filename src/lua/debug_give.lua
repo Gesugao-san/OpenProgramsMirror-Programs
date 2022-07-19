@@ -1,11 +1,13 @@
 
--- Lua 5.2; OpenComputers 1.6.1.11;
--- rm 1.lua&&edit 1.lua&&1
+-- Environment: Lua 5.2 - 5.3; OpenComputers 1.6.1.11;
+-- Platform requirements: N\A
+-- Command: rm 1.lua&&edit 1.lua&&1
 
 local component, term, s, io = require('component'), require('term'), require('serialization'), require('io')
 local debug_card = component.debug
 if debug_card == nil then do return end end
 Rules = {}
+
 
 local function tablelength(T)
   local count = 0

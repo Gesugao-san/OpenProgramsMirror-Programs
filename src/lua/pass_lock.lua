@@ -1,5 +1,7 @@
 
--- Lua 5.2; OpenComputers 1.6.1.11;
+-- Environment: Lua 5.2 - 5.3; OpenComputers 1.6.1.11;
+-- Platform requirements: N\A
+-- Command: rm 1.lua&&edit 1.lua&&1
 
  -- http://minecraft.fandom.com/ru/wiki/OpenComputers/Программа:_кодовый_замок
 
@@ -17,6 +19,7 @@ local password = "mad"
 local admin    = "exit"
 local seconds  = 3 -- more than 0.6!
 local try --, position
+
 
 -- отключаем сигнал на переднюю панель компьютера (дверь закрыта)
 rs.setOutput(sides.south, 0)

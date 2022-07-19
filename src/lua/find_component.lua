@@ -1,4 +1,8 @@
 
+-- Environment: Lua 5.2 - 5.3; OpenComputers 1.6.1.11;
+-- Platform requirements: N\A
+-- Command: rm 1.lua&&edit 1.lua&&1
+
 local term = require('term')
 local component = require("component")
 local serialization = require('serialization')

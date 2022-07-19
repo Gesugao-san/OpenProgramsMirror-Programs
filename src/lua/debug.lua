@@ -1,9 +1,11 @@
 
--- Lua 5.2; OpenComputers 1.6.1.11;
--- rm 1.lua&&edit 1.lua&&1
+-- Environment: Lua 5.2 - 5.3; OpenComputers 1.6.1.11;
+-- Platform requirements: N\A
+-- Command: rm 1.lua&&edit 1.lua&&1
 
 C = require('component'); S = require('serialization')
 local debug_card = C.debug
+
 
 function debug(type)
   if type == nil then print('no "' .. type .. '"'); do return end end

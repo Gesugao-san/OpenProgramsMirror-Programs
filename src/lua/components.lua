@@ -1,5 +1,7 @@
 
--- Lua 5.2; OpenComputers 1.6.1.11;
+-- Environment: Lua 5.2 - 5.3; OpenComputers 1.6.1.11;
+-- Platform requirements: N\A
+-- Command: rm 1.lua&&edit 1.lua&&1
 
 local term          = require('term')
 local component     = require('component')
@@ -10,6 +12,7 @@ local fs            = require('filesystem')
 local target_type = 'gt_pipe_bronze' --'inventory_controller' --'database' --'redstone'
 local path = '/home/' .. target_type .. '.txt'
 os.remove(path)
+
 
 local function table_print(table)
   --term.write(table.serialize())
