@@ -1,6 +1,7 @@
 
--- Lua 5.2; OpenComputers 1.6.1.11;
--- rm 1.lua&&edit 1.lua&&1
+-- Environment: Lua 5.2 - 5.3; OpenComputers 1.6.1.11;
+-- Platform requirements: N\A
+-- Command: rm 1.lua&&edit 1.lua&&1
 
 local component, sides, s, io = require('component'), require('sides'), require('serialization'), require('io')
 local tank_controller = component.tank_controller
@@ -16,11 +17,13 @@ for i = 0, 5, 1 do
   if ((FluidInTank + TankCapacity + TankLevel) > 0) then
     print('Side found! Side: ' .. sides[i] .. ' (' .. i .. ')')
     side = i
+    print('getFluidInTank(' .. i .. '): ' .. s.serialize(FluidInTank))
+    print('getTankCapacity(' .. i .. '): ' .. s.serialize(TankCapacity))
+    print('getTankLevel(' .. i .. '): ' .. s.serialize(TankLevel))
     --break
+  else
+    print('Side ' .. sides[i] .. ' (' .. i .. ') seems empty...')
   end
-  print('getFluidInTank(' .. i .. '): ' .. s.serialize(FluidInTank))
-  print('getTankCapacity(' .. i .. '): ' .. s.serialize(TankCapacity))
-  print('getTankLevel(' .. i .. '): ' .. s.serialize(TankLevel))
 end
 
 if (side == -1) then
