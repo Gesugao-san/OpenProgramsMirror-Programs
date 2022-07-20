@@ -42,6 +42,7 @@ NotShows = {
 
 Mods = {
   'batterybuffer_09_tier_01', --'component', -- GregTech
+  'hatch_input_tier_01', -- GregTech
   'gt_pipe_bronze', -- GregTech
   'info_panel', -- Nuclear Control 2
   'item_itemlightinverted', -- EnderIo
