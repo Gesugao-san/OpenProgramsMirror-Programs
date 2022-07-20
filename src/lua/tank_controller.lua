@@ -13,8 +13,8 @@ print('tank_controller methods: ' .. s.serialize(component.methods(tank_controll
 local side = -1
 print('Searching side...')
 for i = 0, 5, 1 do
-  local FluidInTank, TankCapacity, TankLevel = tonumber(tank_controller.getFluidInTank(i)['n']), tonumber(tank_controller.getTankCapacity(i)), tonumber(tank_controller.getTankLevel(i))
-  if ((FluidInTank + TankCapacity + TankLevel) > 0) then
+  local FluidInTank, TankCapacity, TankLevel = tank_controller.getFluidInTank(i)['n'], tank_controller.getTankCapacity(i), tank_controller.getTankLevel(i)
+  if ((math.abs(FluidInTank) + math.abs(TankCapacity) + math.abs(TankLevel)) > 0) then
     print('Side found! Side: ' .. sides[i] .. ' (' .. i .. ')')
     side = i
     print('getFluidInTank(' .. i .. '): ' .. s.serialize(FluidInTank))
