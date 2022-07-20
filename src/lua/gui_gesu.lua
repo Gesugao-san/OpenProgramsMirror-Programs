@@ -16,18 +16,13 @@ local redstone = component.redstone
 local width, height = gpu.getResolution()
 
 local timeout = 1
+local programName = 'Gesugao-san\'s GUI (develop)'
 
 
 -- Escape for Visual Studio Code — Lua Diagnostics: Undefined field `sleep`.
 local function sleep(n)
   os.sleep(n)
 end
-
--- table.insert(foo, "bar")
---[[ local function tableInsert(table, data)
-  table[#table + 1] = data
-  return table
-end ]]
 
 local function funcYourCodeButton()
   -- Put your nice code here
@@ -38,113 +33,39 @@ local function funcButtonExit()
   os.exit() --do return end
 end
 
-local function funcAddToUpdateToggle(table, data)
-  if not table then do return end end
-  if table[data] then
-    table.remove(table, data)
-    print('Removed: ' .. tostring(table) .. ', ' .. tostring(data))
-  else
-    table.insert(table, data)
-    print('Added: ' .. tostring(table) .. ', ' .. tostring(data))
-  end
-end
-
 local function funcShowNotify()
-  gpu.set((Buttons.button1.x + Buttons.button1.width + 2 + 4), (Buttons.button1.y), 'Information about this platform:')
-  gpu.set((Buttons.button1.x + Buttons.button1.width + 2 + 4), (Buttons.button1.y + 1), 
+  gpu.set((Buttons.button4.x + Buttons.button4.width + 2 + 4), (Buttons.button4.y), 'Information about this platform:')
+  gpu.set((Buttons.button4.x + Buttons.button4.width + 2 + 4), (Buttons.button4.y + 1), 
     'Energy: ' .. string.format("%.3f", computer.energy()) .. '/'.. tostring(computer.maxEnergy() .. ', ' ..
     'Memory: ' .. tostring(computer.freeMemory()) .. '/'.. tostring(computer.totalMemory())
   ))
-  gpu.set((Buttons.button1.x + Buttons.button1.width + 2 + 4), (Buttons.button1.y + 2), 
+  gpu.set((Buttons.button4.x + Buttons.button4.width + 2 + 4), (Buttons.button4.y + 2), 
     'Uptime: ' .. string.format("%.1f", computer.uptime())
   )
-  gpu.set((Buttons.button1.x + Buttons.button1.width + 2 + 4), (Buttons.button1.y + 3), 
+  gpu.set((Buttons.button4.x + Buttons.button4.width + 2 + 4), (Buttons.button4.y + 3), 
     'Address: '.. tostring(computer.tmpAddress())
   )
 end
 
-local function funcShowBadButton()
-  sleep(4)
-  for _, button in pairs(Buttons) do
-    button.active = false
-  end
-  Buttons.button3.active = true
-  DrawGraphics()
-end
-
-local function funcSendRedstone()
-  sleep(4)
-  redstone.setOutput(0, 255)
-  funcButtonExit()
-end
-
-
 Buttons = {
-  button = {
+  button1 = {  -- width, height
     x = 2,
-    y = 3,
-    text = 'Custom code',
-    active = true,
-    switchedButton = true,
-    autoSwitch = false,
-    buttonPressed = false,
-    func = funcYourCodeButton,
-    func_args = nil,
-    height = 3,
-    cFore = 0xFFFFFF,
-    cBack = 0xFF0000,
-    cFore1 = 0x000000,
-    cBack1 = 0x00FF00,
-  },
-  button1 = {
-    x = 2,
-    y = 7,
-    text = 'Show notify',
+    y = 1,
+    text = '[Options]',
     active = true,
     switchedButton = false,
     autoSwitch = false,
     buttonPressed = false,
-    func = funcShowNotify, -- funcAddToUpdateToggle
-    func_args = nil, -- DataToUpdate, funcShowNotify,
-    height = 2,
-    cFore = 0xFFFFFF,
+    func = funcButtonExit,
+    funcToggleable = false,
+    funcTriggerPerFrame = false,
+    height = 1,
+    cFore = 0x000000,
     cBack = 0x0000FF,
-    --cFore1 = 0x000000,
-    --cBack1 = 0x00FF00,
+    --cFore1 = 0xFFFFFF,
+    --cBack1 = 0xFF0000,
   },
-  button2 = {
-    x = 2,
-    y = 10,
-    text = 'Show bad button',
-    active = true,
-    switchedButton = true,
-    autoSwitch = true,
-    buttonPressed = false,
-    func = funcShowBadButton,
-    func_args = nil,
-    height = 4,
-    cFore = 0xFFFFFF,
-    cBack = 0x222200,
-    cFore1 = 0xFFFFFF,
-    cBack1 = 0x002222,
-  },
-  button3 = {
-    x = 2,
-    y = 15,
-    text = 'Do not touch!',
-    active = false,
-    switchedButton = true,
-    autoSwitch = false,
-    buttonPressed = false,
-    func = funcSendRedstone,
-    func_args = nil,
-    height = 5,
-    cFore = 0x333333,
-    cBack = 0xFF0000,
-    cFore1 = 0xFFFFFF,
-    cBack1 = 0xFF0000,
-  },
-  button4 = {  -- width, height
+  button2 = {  -- width, height
     x = width - 2,
     y = 1,
     text = 'X',
@@ -153,16 +74,49 @@ Buttons = {
     autoSwitch = false,
     buttonPressed = false,
     func = funcButtonExit,
-    func_args = nil,
+    funcToggleable = false,
+    funcTriggerPerFrame = false,
     height = 1,
     cFore = 0x333333,
     cBack = 0xFF0000,
-    cFore1 = 0xFFFFFF,
-    cBack1 = 0xFF0000,
+    --cFore1 = 0xFFFFFF,
+    --cBack1 = 0xFF0000,
+  },
+  button3 = {
+    x = 2,
+    y = 3,
+    text = 'Custom code',
+    active = true,
+    switchedButton = true,
+    autoSwitch = false,
+    buttonPressed = false,
+    func = funcYourCodeButton,
+    funcToggleable = false,
+    funcTriggerPerFrame = false,
+    height = 3,
+    cFore = 0xFFFFFF,
+    cBack = 0xFF0000,
+    cFore1 = 0x000000,
+    cBack1 = 0x00FF00,
+  },
+  button4 = {
+    x = 2,
+    y = 7,
+    text = 'Toggle notify',
+    active = true,
+    switchedButton = false,
+    autoSwitch = false,
+    buttonPressed = false,
+    func = funcShowNotify,
+    funcToggleable = true,
+    funcTriggerPerFrame = false,
+    height = 2,
+    cFore = 0xFFFFFF,
+    cBack = 0x0000FF,
+    --cFore1 = 0x000000,
+    --cBack1 = 0x00FF00,
   },
 }
-
-DataToUpdate = {}
 
 local function initButtons()
   for _, button in pairs(Buttons) do
@@ -172,8 +126,9 @@ end
 
 local function drawBar()
   gpu.setBackground(0x555555)
-  --gpu.setForeground(0x555555)
   gpu.fill(1, 1, width, 1, ' ')
+  gpu.setForeground(0x000000)
+  gpu.set((width - (string.len(programName) * 2)), (1), programName)
 end
 
 local function drawButtons()
@@ -205,9 +160,11 @@ local function drawButtons()
   gpu.setBackground(0x000000)
 end
 
-local function drawUpdateble()
-  for _, func in pairs(DataToUpdate) do
-    func()
+local function triggerUpdatable()
+  for _, button in pairs(Buttons) do
+    if (button.funcTriggerPerFrame) then
+      button.func()
+    end
   end
 end
 
@@ -228,7 +185,11 @@ local function searchButton()
         end
         DrawGraphics()
       end
-      button.func(button.func_args)
+      if (button.funcToggleable) then
+        button.funcTriggerPerFrame = not button.funcTriggerPerFrame
+        DrawGraphics()
+      end
+      button.func()
     end
   end
 end
@@ -238,7 +199,7 @@ function DrawGraphics(clear)
   if (clear) then term.clear() end
   drawBar()
   drawButtons()
-  drawUpdateble()
+  triggerUpdatable()
 end
 
 

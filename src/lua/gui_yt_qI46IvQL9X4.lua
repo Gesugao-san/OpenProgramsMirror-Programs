@@ -114,7 +114,7 @@ local function initButtons()
   end
 end
 
-local function drawButtons()
+function DrawButtons()
   for _, button in pairs(Buttons) do
     if (button.active) then
       if (not button.buttonPressed) then
@@ -146,7 +146,7 @@ end
 function DrawGraphics()
   term.clear()
   --drawBar()
-  drawButtons()
+  DrawButtons()
 end
 
 local function searchButton()
@@ -172,7 +172,7 @@ end
 
 
 function Main()
-  computer.beep()
+  require('computer').beep()
   initButtons()
   DrawGraphics()
   while true do
