@@ -12,19 +12,25 @@ local unicode = require('unicode')
 local event = require('event')
 local term = require('term')
 local gpu = component.gpu
-local redstone = component.redstone
 local width, height = gpu.getResolution()
+local clrBlack, clrWhite, clrRed, clrGreen, clrBlue = 0x000000, 0xFFFFFF, 0xFF0000, 0x00FF00, 0x0000FF
+local clrBlood = 0x333333
 
-local timeout = 1
+local timeout = 0.5
 local programName = 'Gesugao-san\'s GUI (develop)'
 
 
--- Escape for Visual Studio Code — Lua Diagnostics: Undefined field `sleep`.
+-- Warning escape for Visual Studio Code — Lua Diagnostics: Undefined field `sleep`.
 local function sleep(n)
   os.sleep(n)
 end
 
-local function funcYourCodeButton()
+local function colorsReset()
+  gpu.setBackground(clrBlack)
+  gpu.setForeground(clrWhite)
+end
+
+local function funcDummyButton()
   -- Put your nice code here
 end
 
@@ -34,16 +40,38 @@ local function funcButtonExit()
 end
 
 local function funcShowNotify()
-  gpu.set((Buttons.button4.x + Buttons.button4.width + 2 + 4), (Buttons.button4.y), 'Information about this platform:')
-  gpu.set((Buttons.button4.x + Buttons.button4.width + 2 + 4), (Buttons.button4.y + 1), 
-    'Energy: ' .. string.format("%.3f", computer.energy()) .. '/'.. tostring(computer.maxEnergy() .. ', ' ..
-    'Memory: ' .. tostring(computer.freeMemory()) .. '/'.. tostring(computer.totalMemory())
+  local energy, maxEnergy   = computer.energy(),     computer.maxEnergy()
+  local memory, totalMemory = computer.freeMemory(), computer.totalMemory()
+  local uptime, tmpAddress  = computer.uptime(),     computer.tmpAddress()
+  local maxSteps = 10
+  local mesuresInOneStep = maxEnergy / maxSteps -- 4500 / 10 = 450
+  local step = 1 -- dozen
+  local target = tonumber(math.floor(energy))
+  local targetWidth = 0
+  while (target > 0) do
+    target = target - mesuresInOneStep
+    targetWidth = targetWidth + 1
+  end
+  -- local targetWidth = step * (string.len(tostring(math.floor(energy))) - 3) -- 4500 = 4 len
+  --print(string.len(tostring(math.floor(energy))))
+  colorsReset()
+  gpu.set((Buttons.button4.x + Buttons.button4.width + 2 + 4), (Buttons.button4.y), 'Info about this platform:')
+  gpu.set((Buttons.button4.x + Buttons.button4.width + 2 + 4), (Buttons.button4.y + 1),
+    'Energy: ' .. string.format("%.3f", energy) .. '/'.. tostring(maxEnergy .. ', ' ..
+    'Memory: ' .. tostring(memory) .. '/'.. tostring(totalMemory)
   ))
-  gpu.set((Buttons.button4.x + Buttons.button4.width + 2 + 4), (Buttons.button4.y + 2), 
-    'Uptime: ' .. string.format("%.1f", computer.uptime())
+
+  gpu.setBackground(clrRed)
+  gpu.fill((Buttons.button4.x + Buttons.button4.width + 2 + 4), (Buttons.button4.y + 2), maxSteps, 1, ' ')
+  gpu.setBackground(clrGreen)
+  gpu.fill((Buttons.button4.x + Buttons.button4.width + 2 + 4), (Buttons.button4.y + 2), targetWidth, 1, ' ') -- targetWidth
+  colorsReset()
+
+  gpu.set((Buttons.button4.x + Buttons.button4.width + 2 + 4), (Buttons.button4.y + 3),
+    'Uptime: ' .. string.format("%.1f", uptime)
   )
-  gpu.set((Buttons.button4.x + Buttons.button4.width + 2 + 4), (Buttons.button4.y + 3), 
-    'Address: '.. tostring(computer.tmpAddress())
+  gpu.set((Buttons.button4.x + Buttons.button4.width + 2 + 4), (Buttons.button4.y + 4),
+    'Address: '.. tostring(tmpAddress)
   )
 end
 
@@ -56,14 +84,14 @@ Buttons = {
     switchedButton = false,
     autoSwitch = false,
     buttonPressed = false,
-    func = funcButtonExit,
+    func = funcDummyButton,
     funcToggleable = false,
     funcTriggerPerFrame = false,
     height = 1,
-    cFore = 0x000000,
-    cBack = 0x0000FF,
-    --cFore1 = 0xFFFFFF,
-    --cBack1 = 0xFF0000,
+    cFore = clrBlack,
+    cBack = clrBlue,
+    --cFore1 = clrWhite,
+    --cBack1 = clrRed,
   },
   button2 = {  -- width, height
     x = width - 2,
@@ -77,10 +105,10 @@ Buttons = {
     funcToggleable = false,
     funcTriggerPerFrame = false,
     height = 1,
-    cFore = 0x333333,
-    cBack = 0xFF0000,
-    --cFore1 = 0xFFFFFF,
-    --cBack1 = 0xFF0000,
+    cFore = clrBlood,
+    cBack = clrRed,
+    --cFore1 = clrWhite,
+    --cBack1 = clrRed,
   },
   button3 = {
     x = 2,
@@ -90,14 +118,14 @@ Buttons = {
     switchedButton = true,
     autoSwitch = false,
     buttonPressed = false,
-    func = funcYourCodeButton,
+    func = funcDummyButton,
     funcToggleable = false,
     funcTriggerPerFrame = false,
     height = 3,
-    cFore = 0xFFFFFF,
-    cBack = 0xFF0000,
-    cFore1 = 0x000000,
-    cBack1 = 0x00FF00,
+    cFore = clrWhite,
+    cBack = clrRed,
+    cFore1 = clrBlack,
+    cBack1 = clrGreen,
   },
   button4 = {
     x = 2,
@@ -111,10 +139,10 @@ Buttons = {
     funcToggleable = true,
     funcTriggerPerFrame = false,
     height = 2,
-    cFore = 0xFFFFFF,
-    cBack = 0x0000FF,
-    --cFore1 = 0x000000,
-    --cBack1 = 0x00FF00,
+    cFore = clrWhite,
+    cBack = clrBlue,
+    --cFore1 = clrBlack,
+    --cBack1 = clrGreen,
   },
 }
 
@@ -124,10 +152,10 @@ local function initButtons()
   end
 end
 
-local function drawBar()
+local function drawTaskBar()
   gpu.setBackground(0x555555)
   gpu.fill(1, 1, width, 1, ' ')
-  gpu.setForeground(0x000000)
+  gpu.setForeground(clrBlack)
   gpu.set((width - (string.len(programName) * 2)), (1), programName)
 end
 
@@ -156,8 +184,8 @@ local function drawButtons()
       end
     end
   end
-  gpu.setForeground(0xFFFFFF)
-  gpu.setBackground(0x000000)
+  gpu.setForeground(clrWhite)
+  gpu.setBackground(clrBlack)
 end
 
 local function triggerUpdatable()
@@ -194,10 +222,10 @@ local function searchButton()
   end
 end
 
-function DrawGraphics(clear)
-  if (clear == nil) then clear = true end
-  if (clear) then term.clear() end
-  drawBar()
+function DrawGraphics()
+  term.clear()
+  colorsReset()
+  drawTaskBar()
   drawButtons()
   triggerUpdatable()
 end
