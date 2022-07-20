@@ -6,20 +6,28 @@
 -- http://youtu.be/qI46IvQL9X4 http://pastebin.com/6QDe4kZH
 -- pastebin get 6QDe4kZH Buttons
 
-local component = require("component")
-local computer = require("computer")
-local unicode = require("unicode")
-local event = require("event")
-local term = require("term")
-local width, height = gpu.getResolution()
+local component = require('component')
+local computer = require('computer')
+local unicode = require('unicode')
+local event = require('event')
+local term = require('term')
 local gpu = component.gpu
 local redstone = component.redstone
+local width, height = gpu.getResolution()
+
+local timeout = 1
 
 
 -- Escape for Visual Studio Code — Lua Diagnostics: Undefined field `sleep`.
 local function sleep(n)
   os.sleep(n)
 end
+
+-- table.insert(foo, "bar")
+--[[ local function tableInsert(table, data)
+  table[#table + 1] = data
+  return table
+end ]]
 
 local function funcYourCodeButton()
   -- Put your nice code here
@@ -30,8 +38,29 @@ local function funcButtonExit()
   os.exit() --do return end
 end
 
+local function funcAddToUpdateToggle(table, data)
+  if not table then do return end end
+  if table[data] then
+    table.remove(table, data)
+    print('Removed: ' .. tostring(table) .. ', ' .. tostring(data))
+  else
+    table.insert(table, data)
+    print('Added: ' .. tostring(table) .. ', ' .. tostring(data))
+  end
+end
+
 local function funcShowNotify()
-  gpu.set((Buttons.button1.x + Buttons.button1.width + 2 + 4), Buttons.button1.y, "The button was pressed!")
+  gpu.set((Buttons.button1.x + Buttons.button1.width + 2 + 4), (Buttons.button1.y), 'Information about this platform:')
+  gpu.set((Buttons.button1.x + Buttons.button1.width + 2 + 4), (Buttons.button1.y + 1), 
+    'Energy: ' .. string.format("%.3f", computer.energy()) .. '/'.. tostring(computer.maxEnergy() .. ', ' ..
+    'Memory: ' .. tostring(computer.freeMemory()) .. '/'.. tostring(computer.totalMemory())
+  ))
+  gpu.set((Buttons.button1.x + Buttons.button1.width + 2 + 4), (Buttons.button1.y + 2), 
+    'Uptime: ' .. string.format("%.1f", computer.uptime())
+  )
+  gpu.set((Buttons.button1.x + Buttons.button1.width + 2 + 4), (Buttons.button1.y + 3), 
+    'Address: '.. tostring(computer.tmpAddress())
+  )
 end
 
 local function funcShowBadButton()
@@ -40,7 +69,7 @@ local function funcShowBadButton()
     button.active = false
   end
   Buttons.button3.active = true
-  DrawButtons()
+  DrawGraphics()
 end
 
 local function funcSendRedstone()
@@ -54,12 +83,13 @@ Buttons = {
   button = {
     x = 2,
     y = 3,
-    text = "Custom code",
+    text = 'Custom code',
     active = true,
     switchedButton = true,
     autoSwitch = false,
     buttonPressed = false,
     func = funcYourCodeButton,
+    func_args = nil,
     height = 3,
     cFore = 0xFFFFFF,
     cBack = 0xFF0000,
@@ -69,12 +99,13 @@ Buttons = {
   button1 = {
     x = 2,
     y = 7,
-    text = "Show notify",
+    text = 'Show notify',
     active = true,
     switchedButton = false,
     autoSwitch = false,
     buttonPressed = false,
-    func = funcShowNotify,
+    func = funcShowNotify, -- funcAddToUpdateToggle
+    func_args = nil, -- DataToUpdate, funcShowNotify,
     height = 2,
     cFore = 0xFFFFFF,
     cBack = 0x0000FF,
@@ -84,12 +115,13 @@ Buttons = {
   button2 = {
     x = 2,
     y = 10,
-    text = "Show bad button",
+    text = 'Show bad button',
     active = true,
     switchedButton = true,
     autoSwitch = true,
     buttonPressed = false,
     func = funcShowBadButton,
+    func_args = nil,
     height = 4,
     cFore = 0xFFFFFF,
     cBack = 0x222200,
@@ -99,12 +131,13 @@ Buttons = {
   button3 = {
     x = 2,
     y = 15,
-    text = "Do not touch!",
+    text = 'Do not touch!',
     active = false,
     switchedButton = true,
     autoSwitch = false,
     buttonPressed = false,
     func = funcSendRedstone,
+    func_args = nil,
     height = 5,
     cFore = 0x333333,
     cBack = 0xFF0000,
@@ -114,12 +147,13 @@ Buttons = {
   button4 = {  -- width, height
     x = width - 2,
     y = 1,
-    text = "X",
+    text = 'X',
     active = true,
     switchedButton = false,
     autoSwitch = false,
     buttonPressed = false,
     func = funcButtonExit,
+    func_args = nil,
     height = 1,
     cFore = 0x333333,
     cBack = 0xFF0000,
@@ -127,6 +161,8 @@ Buttons = {
     cBack1 = 0xFF0000,
   },
 }
+
+DataToUpdate = {}
 
 local function initButtons()
   for _, button in pairs(Buttons) do
@@ -137,7 +173,7 @@ end
 local function drawBar()
   gpu.setBackground(0x555555)
   --gpu.setForeground(0x555555)
-  gpu.fill(1, 1, width, 1, " ")
+  gpu.fill(1, 1, width, 1, ' ')
 end
 
 local function drawButtons()
@@ -150,7 +186,7 @@ local function drawButtons()
         gpu.setForeground(button.cFore1)
         gpu.setBackground(button.cBack1)
       end
-      gpu.fill(button.x, button.y, button.width, button.height, " ") -- set button Background
+      gpu.fill(button.x, button.y, button.width, button.height, ' ') -- set button Background
       if (button.height == 1) then
         gpu.set(button.x + 1, button.y, button.text)
       elseif ((button.height % 2) == 0) then   -- if button height is an even number
@@ -169,14 +205,15 @@ local function drawButtons()
   gpu.setBackground(0x000000)
 end
 
-function DrawGraphics()
-  term.clear()
-  drawBar()
-  drawButtons()
+local function drawUpdateble()
+  for _, func in pairs(DataToUpdate) do
+    func()
+  end
 end
 
 local function searchButton()
-  local _, _, x, y = event.pull("touch")
+  local name, _, x, y = event.pull(timeout, 'touch') -- name, address, x, y
+  if name == nil then DrawGraphics(); do return end end
   for _, button in pairs(Buttons) do
     if ((x >= button.x) and (x < button.x + button.width + 2) and (y >= button.y) and (y < button.y + button.height) and (button.active)) then
       if (button.switchedButton == true) then
@@ -189,11 +226,19 @@ local function searchButton()
         else
           button.buttonPressed = true
         end
-        DrawButtons()
+        DrawGraphics()
       end
-      button.func()
+      button.func(button.func_args)
     end
   end
+end
+
+function DrawGraphics(clear)
+  if (clear == nil) then clear = true end
+  if (clear) then term.clear() end
+  drawBar()
+  drawButtons()
+  drawUpdateble()
 end
 
 

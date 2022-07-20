@@ -6,14 +6,16 @@
 -- http://youtu.be/qI46IvQL9X4 http://pastebin.com/6QDe4kZH
 -- pastebin get 6QDe4kZH Buttons
 
-local component = require("component")
-local event = require("event")
+local component = require('component')
+local unicode = require('unicode')
+local event = require('event')
+local term = require('term')
 local gpu = component.gpu
 local redstone = component.redstone
-local unicode = require("unicode")
-local term = require("term")
+local width, height = gpu.getResolution()
 
 
+-- Escape for Visual Studio Code — Lua Diagnostics: Undefined field `sleep`.
 local function sleep(n)
   os.sleep(n)
 end
@@ -23,7 +25,7 @@ local function funcYourCodeButton()
 end
 
 local function funcShowNotify()
-  gpu.set((Buttons.button1.x + Buttons.button1.width + 2 + 4), Buttons.button1.y, "The button was pressed!")
+  gpu.set((Buttons.button1.x + Buttons.button1.width + 2 + 4), Buttons.button1.y, 'The button was pressed!')
 end
 
 local function funcShowBadButton()
@@ -32,25 +34,27 @@ local function funcShowBadButton()
     button.active = false
   end
   Buttons.button3.active = true
-  term.clear()
   DrawButtons()
 end
 
 local function funcSendRedstone()
   sleep(4)
   redstone.setOutput(0, 255)
+  term.clear()
+  os.exit() --do return end -- funcButtonExit()
 end
 
+
 Buttons = {
-  button  = {
+  button = {
     x = 2,
-    y = 2,
-    text = "Your code",
+    y = 3,
+    text = 'Custom code',
     active = true,
     switchedButton = true,
     autoSwitch = false,
     buttonPressed = false,
-    func = funcYourCodeButton,
+    func = funcYourCodeButton(),
     height = 3,
     cFore = 0xFFFFFF,
     cBack = 0xFF0000,
@@ -58,14 +62,14 @@ Buttons = {
     cBack1 = 0x00FF00,
   },
   button1 = {
-    x = 16,
-    y = 4,
-    text = "Notify",
+    x = 2,
+    y = 7,
+    text = 'Show notify',
     active = true,
     switchedButton = false,
     autoSwitch = false,
     buttonPressed = false,
-    func = funcShowNotify,
+    func = funcShowNotify(),
     height = 2,
     cFore = 0xFFFFFF,
     cBack = 0x0000FF,
@@ -73,29 +77,29 @@ Buttons = {
     --cBack1 = 0x00FF00,
   },
   button2 = {
-    x = 4,
-    y = 16,
-    text = "Show bad button",
+    x = 2,
+    y = 10,
+    text = 'Show bad button',
     active = true,
     switchedButton = true,
     autoSwitch = true,
     buttonPressed = false,
-    func = funcShowBadButton,
+    func = funcShowBadButton(),
     height = 4,
     cFore = 0xFFFFFF,
-    cBack = 0xFFFF00,
+    cBack = 0x222200,
     cFore1 = 0xFFFFFF,
-    cBack1 = 0x00FFFF,
+    cBack1 = 0x002222,
   },
   button3 = {
-    x = 72,
-    y = 24,
-    text = "Do not touch!",
+    x = 2,
+    y = 15,
+    text = 'Do not touch!',
     active = false,
     switchedButton = true,
     autoSwitch = false,
     buttonPressed = false,
-    func = funcSendRedstone,
+    func = funcSendRedstone(),
     height = 5,
     cFore = 0x333333,
     cBack = 0xFF0000,
@@ -110,8 +114,7 @@ local function initButtons()
   end
 end
 
-function DrawButtons()
-  term.clear()
+local function drawButtons()
   for _, button in pairs(Buttons) do
     if (button.active) then
       if (not button.buttonPressed) then
@@ -121,7 +124,7 @@ function DrawButtons()
         gpu.setForeground(button.cFore1)
         gpu.setBackground(button.cBack1)
       end
-      gpu.fill(button.x, button.y, button.width, button.height, " ") -- set button Background
+      gpu.fill(button.x, button.y, button.width, button.height, ' ') -- set button Background
       if (button.height == 1) then
         gpu.set(button.x + 1, button.y, button.text)
       elseif ((button.height % 2) == 0) then   -- if button height is an even number
@@ -132,7 +135,7 @@ function DrawButtons()
       if ((button.autoSwitch == true) and (button.buttonPressed == true)) then
         button.buttonPressed = false
         sleep(4)
-        DrawButtons()
+        DrawGraphics()
       end
     end
   end
@@ -140,8 +143,14 @@ function DrawButtons()
   gpu.setBackground(0x000000)
 end
 
+function DrawGraphics()
+  term.clear()
+  --drawBar()
+  drawButtons()
+end
+
 local function searchButton()
-  local _, _, x, y = event.pull("touch")
+  local _, _, x, y = event.pull('touch')
   for _, button in pairs(Buttons) do
     if ((x >= button.x) and (x < button.x + button.width + 2) and (y >= button.y) and (y < button.y + button.height) and (button.active)) then
       if (button.switchedButton == true) then
@@ -163,8 +172,9 @@ end
 
 
 function Main()
+  computer.beep()
   initButtons()
-  DrawButtons()
+  DrawGraphics()
   while true do
     searchButton()
   end
