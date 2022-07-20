@@ -13,7 +13,7 @@ local event = require('event')
 local term = require('term')
 local gpu = component.gpu
 local width, height = gpu.getResolution()
-local clrBlack, clrWhite, clrRed, clrGreen, clrBlue = 0x000000, 0xFFFFFF, 0xFF0000, 0x00FF00, 0x0000FF
+local clrBlack, clrWhite, clrRed, clrGreen, clrBlue, clrYellow = 0x000000, 0xFFFFFF, 0xFF0000, 0x00FF00, 0x0000FF, 0xFFFF00
 local clrBlood = 0x333333
 
 local timeout = 0.5
@@ -39,38 +39,43 @@ local function funcButtonExit()
   os.exit() --do return end
 end
 
-local function funcShowNotify()
-  local energy, maxEnergy   = computer.energy(),     computer.maxEnergy()
-  local memory, totalMemory = computer.freeMemory(), computer.totalMemory()
-  local uptime, tmpAddress  = computer.uptime(),     computer.tmpAddress()
-  local maxSteps = 10
-  local mesuresInOneStep = maxEnergy / maxSteps -- 4500 / 10 = 450
-  local step = 1 -- dozen
-  local target = tonumber(math.floor(energy))
+local function drawProgressBar(x, y, data1, data2, clr1, clr2)
+  local multiplier = math.ceil(1)
+  local maxSteps = 10 * multiplier
+  local mesuresInOneStep = data2 / maxSteps -- 4500 / 10 = 450
+  local target = tonumber(math.floor(data1))
   local targetWidth = 0
   while (target > 0) do
     target = target - mesuresInOneStep
     targetWidth = targetWidth + 1
   end
+  targetWidth = targetWidth * multiplier
+  gpu.setBackground(clr1)
+  gpu.fill(x, y, maxSteps, 1, ' ')
+  gpu.setBackground(clr2)
+  gpu.fill(x, y, targetWidth, 1, ' ')
+  colorsReset()
+end
+
+local function funcShowNotify()
+  local energy, maxEnergy   = computer.energy(),     computer.maxEnergy()
+  local memory, totalMemory = computer.freeMemory(), computer.totalMemory()
+  local uptime, tmpAddress  = computer.uptime(),     computer.tmpAddress()
+  local _button = Buttons.button3
   -- local targetWidth = step * (string.len(tostring(math.floor(energy))) - 3) -- 4500 = 4 len
   --print(string.len(tostring(math.floor(energy))))
   colorsReset()
-  gpu.set((Buttons.button4.x + Buttons.button4.width + 2 + 4), (Buttons.button4.y), 'Info about this platform:')
-  gpu.set((Buttons.button4.x + Buttons.button4.width + 2 + 4), (Buttons.button4.y + 1),
+  gpu.set((_button.x + _button.width + 2), (_button.y), 'Info about this platform:')
+  gpu.set((_button.x + _button.width + 2), (_button.y + 1),
     'Energy: ' .. string.format("%.3f", energy) .. '/'.. tostring(maxEnergy .. ', ' ..
     'Memory: ' .. tostring(memory) .. '/'.. tostring(totalMemory)
   ))
-
-  gpu.setBackground(clrRed)
-  gpu.fill((Buttons.button4.x + Buttons.button4.width + 2 + 4), (Buttons.button4.y + 2), maxSteps, 1, ' ')
-  gpu.setBackground(clrGreen)
-  gpu.fill((Buttons.button4.x + Buttons.button4.width + 2 + 4), (Buttons.button4.y + 2), targetWidth, 1, ' ') -- targetWidth
-  colorsReset()
-
-  gpu.set((Buttons.button4.x + Buttons.button4.width + 2 + 4), (Buttons.button4.y + 3),
+  drawProgressBar((_button.x + _button.width + 2),      (_button.y + 2), energy, maxEnergy, clrRed, clrGreen)
+  drawProgressBar((_button.x + _button.width + 2 + 12), (_button.y + 2), memory, totalMemory, clrRed, clrYellow)
+  gpu.set((_button.x + _button.width + 2), (_button.y + 3),
     'Uptime: ' .. string.format("%.1f", uptime)
   )
-  gpu.set((Buttons.button4.x + Buttons.button4.width + 2 + 4), (Buttons.button4.y + 4),
+  gpu.set((_button.x + _button.width + 2), (_button.y + 4),
     'Address: '.. tostring(tmpAddress)
   )
 end
@@ -113,23 +118,6 @@ Buttons = {
   button3 = {
     x = 2,
     y = 3,
-    text = 'Custom code',
-    active = true,
-    switchedButton = true,
-    autoSwitch = false,
-    buttonPressed = false,
-    func = funcDummyButton,
-    funcToggleable = false,
-    funcTriggerPerFrame = false,
-    height = 3,
-    cFore = clrWhite,
-    cBack = clrRed,
-    cFore1 = clrBlack,
-    cBack1 = clrGreen,
-  },
-  button4 = {
-    x = 2,
-    y = 7,
     text = 'Toggle notify',
     active = true,
     switchedButton = false,
@@ -143,6 +131,23 @@ Buttons = {
     cBack = clrBlue,
     --cFore1 = clrBlack,
     --cBack1 = clrGreen,
+  },
+  button4 = {
+    x = 2,
+    y = 6,
+    text = 'Custom code',
+    active = true,
+    switchedButton = true,
+    autoSwitch = false,
+    buttonPressed = false,
+    func = funcDummyButton,
+    funcToggleable = false,
+    funcTriggerPerFrame = false,
+    height = 3,
+    cFore = clrWhite,
+    cBack = clrRed,
+    cFore1 = clrBlack,
+    cBack1 = clrGreen,
   },
 }
 
