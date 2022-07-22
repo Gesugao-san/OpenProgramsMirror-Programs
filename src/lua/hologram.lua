@@ -89,9 +89,9 @@ else
   print('setRotationSpeed - Error?')
 end
 
--- For Visual Studio Code, "Undefined field `sleep`."
-local function sleep(data)
-  os.sleep(data)
+-- Warning escape for Visual Studio Code — Lua Diagnostics: Undefined field `sleep`.
+local function sleep(n)
+  os.sleep(n)
 end
 
 local function block_make(offset_x, offset_y, offset_z, data, sleep)

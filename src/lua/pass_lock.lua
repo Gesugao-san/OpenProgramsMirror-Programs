@@ -5,36 +5,40 @@
 
  -- http://minecraft.fandom.com/ru/wiki/OpenComputers/Программа:_кодовый_замок
 
--- подключаем необходимые интерфейсы
+-- connect the necessary interfaces
 local term      = require("term")
 local sides     = require("sides")
 local note      = require("note")
 local component = require("component")
 local string    = require("string")
--- находим красную плату компьютера
+-- find the red computer board
 local rs = component.redstone
 
--- объявляем переменные: пароли и переменную для записи ввода
+-- declare variables: passwords and a variable to record input
 local password = "mad"
 local admin    = "exit"
 local seconds  = 3 -- more than 0.6!
 local try --, position
 
+-- Warning escape for Visual Studio Code — Lua Diagnostics: Undefined field `sleep`.
+local function sleep(n)
+  os.sleep(n)
+end
 
--- отключаем сигнал на переднюю панель компьютера (дверь закрыта)
+-- turn off the signal to the front panel of the computer (the door is closed)
 rs.setOutput(sides.south, 0)
--- очищаем терминал
+-- clear the terminal
 term.clear()
 
 while true do
-  -- ввод пароля
+  -- password entry
   io.write("Enter password: ")
   local err, try = pcall(io.read)
   
-  -- если игрок попытался прервать программу
+  -- if the player tried to interrupt the program
   if not err then
     print("No, no, no!")
-  -- если пароль верный
+  -- if the password is correct
   elseif try == password then
     --position = term.getCursor()
     --print("position:" .. position)
@@ -43,28 +47,28 @@ while true do
     for i = 1, string.len(password), 1 do
       io.write("*")
     end
-    -- пускаем сигнал на переднюю сторону компьютера (дверь открыта)
+    -- we send a signal to the front side of the computer (the door is open)
     rs.setOutput(sides.south, 15)
     print("\nOk. " .. seconds .. " seconds!")
-    -- воспроизводим звуковой сигнал
+    -- play sound signal
     note.play(83, 0.3)
     note.play(90, 0.2)
-    -- ожидаем две с половиной секунды
-    os.sleep(seconds - 0.5)
-    -- закрываем дверь
+    -- wait two and a half seconds
+    sleep(seconds - 0.5)
+    -- close the door
     rs.setOutput(sides.south, 0)
     print("Locked!")
-  -- если введенное слово совпало с администраторским паролем
+  -- if the entered word matches the administrator password
   elseif try == admin then
-    -- прерываем выполнение программы
+    -- interrupt program execution
     break
-  -- если была введена команда "cls"
+  -- if the "cls" command was entered
   elseif try == "cls" then
-    -- очищаем консоль
+    -- clearing the console
     term.clear()
-  -- если было введено что-то другое
+  -- if something else was entered
   else
-    -- выводим сообщение, и воспроизводим звук ошибки
+    -- display a message and play the error sound
     print("Wrong password! Try again.")
     note.play(70, 0.2)
   end

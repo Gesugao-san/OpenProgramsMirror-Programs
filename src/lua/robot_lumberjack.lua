@@ -8,6 +8,11 @@ local robot = require("robot")
 local comp = require("computer")
 
 
+-- Warning escape for Visual Studio Code — Lua Diagnostics: Undefined field `sleep`.
+local function sleep(n)
+  os.sleep(n)
+end
+
 local function jack()
   while robot.detect() do
     if not robot.up() then
@@ -52,5 +57,5 @@ while true do
     break
   end
 
-  os.sleep(30)
+  sleep(30)
 end

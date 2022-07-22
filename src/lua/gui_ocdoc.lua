@@ -11,6 +11,8 @@ local component = require("component")
 local gpu = component.gpu -- get primary gpu component
 local w, h = gpu.getResolution()
 
+
+-- Warning escape for Visual Studio Code — Lua Diagnostics: Undefined field `sleep`.
 local function sleep(n)
   os.sleep(n)
 end
