@@ -23,22 +23,23 @@ for side = 0, 5, 1 do
       local item = inventory_controller.getStackInSlot(side, slot)
       if item then
         countOk = countOk + 1
-        print("Item id: ", item.id)
-        print("Item name: ", item.name)
-        print("Item label: ", item.label)
-        print("Item count: ", item.size)
-        print("Item damage: ", item.damage)
-        print("Item maxDamage: " .. item.maxDamage)
-        print("Item size: ", item.size)
-        print("Item maxSize: ", item.maxSize)
+        print('Item ID  ',      ': ' .. tostring(item.id) .. ' ========')
+        print('Item name',      ': ' .. tostring(item.name))
+        print('Item label',     ': ' .. tostring(item.label))
+        print('Item count',     ': ' .. tostring(item.size))
+        print('Item damage',    ': ' .. tostring(item.damage))
+        print('Item maxDamage', ': ' .. tostring(item.maxDamage))
+        print('Item size',      ': ' .. tostring(item.size))
+        print('Item maxSize',   ': ' .. tostring(item.maxSize))
+        print('Item hasTag',    ': ' .. tostring(item.hasTag) .. ' ========')
       else
         countEmpty = countEmpty + 1
-        --print("Slot " .. slot .. " is empty")
+        --print('Slot ' .. slot .. ' is empty')
       end
     end
     _side = side
   end
-  print('Side ' .. side .. ' (' .. sides[side] .. ')', ': ' .. countEmpty .. ' empty slots, ' .. countOk .. ' filled slots')
+  print('Side ' .. side .. ' (' .. sides[side] .. ')', ': ' .. countEmpty .. ' empty slots, ' .. countOk .. ' filled slots, ' .. tonumber(InventorySize or 0) .. ' inventory size')
 end
 
 if (_side == -1) then
