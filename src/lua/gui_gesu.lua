@@ -110,31 +110,31 @@ Buttons = {
     funcToggleable = false,
     funcTriggerPerFrame = false,
     height = 1,
-    cFore = clrBlood,
     cBack = clrRed,
-    --cFore1 = clrWhite,
+    cFore = clrBlood,
     --cBack1 = clrRed,
+    --cFore1 = clrWhite,
   },
   button3 = {
     x = 2,
     y = 3,
     text = 'Toggle notify',
     active = true,
-    switchedButton = false,
+    switchedButton = true,
     autoSwitch = false,
     buttonPressed = false,
     func = funcShowNotify,
     funcToggleable = true,
     funcTriggerPerFrame = false,
-    height = 2,
-    cFore = clrWhite,
+    height = 1,
     cBack = clrBlue,
-    --cFore1 = clrBlack,
-    --cBack1 = clrGreen,
+    cFore = clrWhite,
+    cBack1 = clrGreen,
+    cFore1 = clrBlack,
   },
   button4 = {
     x = 2,
-    y = 6,
+    y = 5,
     text = 'Custom code',
     active = true,
     switchedButton = true,
@@ -143,11 +143,11 @@ Buttons = {
     func = funcDummyButton,
     funcToggleable = false,
     funcTriggerPerFrame = false,
-    height = 3,
-    cFore = clrWhite,
+    height = 1,
     cBack = clrRed,
-    cFore1 = clrBlack,
+    cFore = clrWhite,
     cBack1 = clrGreen,
+    cFore1 = clrBlack,
   },
 }
 
@@ -238,6 +238,7 @@ end
 
 function Main()
   computer.beep()
+  if computer.energy() < 100 then return print("Error! Low energy level.") end
   initButtons()
   DrawGraphics()
   while true do

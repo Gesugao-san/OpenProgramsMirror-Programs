@@ -8,6 +8,7 @@ local component     = require('component')
 local ev            = require('event')
 local serialization = require('serialization')
 local fs            = require('filesystem')
+local computer      = require('computer')
 
 local target_type = 'gt_pipe_bronze' --'inventory_controller' --'database' --'redstone'
 local path = '/home/' .. target_type .. '.txt'
@@ -53,7 +54,13 @@ table_save(proxy)
 
 term.write(proxy.address .. ' ' .. proxy.type)
 
-print(proxy.getStoredSteam())
+--print(proxy.getStoredSteam())
+
+local DeviceInfo = computer.getDeviceInfo()
+for address, table in pairs(DeviceInfo) do
+  print(address .. ': ' .. S.serialize(table['description']) .. ', ' .. S.serialize(table['product']) .. ', ' .. S.serialize(table['class']) .. ';')
+end
+
 
 --[[ local path = '/home/debug.txt'
 local file = io.open(path) --fs.open(path, 'r')
